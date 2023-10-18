@@ -28,7 +28,7 @@ form.addEventListener('submit', (e) => {
         email: emailInput.value,
         message: messageTextarea.value
     });
-    localStorage.removeItem('feedback-form-state');
+    // localStorage.removeItem('feedback-form-state');
 });
 
 
