@@ -21,15 +21,19 @@ const loadFromLocalStorage = () => {
     }
 };
 
-
+form.addEventListener('input', updateLocalStorage);
 form.addEventListener('submit', (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     console.log({
-        email: emailInput.value,
-        message: messageTextarea.value
+        email: email.value,
+        message: message.value
     });
     // localStorage.removeItem('feedback-form-state');
+    loadFromLocalStorage();
+    
 });
+
+
 
 
 
