@@ -1,6 +1,4 @@
- 
-  
-// Підключаємо бібліотеку lodash.throttle
+
 import throttle from 'lodash.throttle';
 
 const form = document.querySelector('.feedback-form');
@@ -17,13 +15,18 @@ function saveFormStateToLocalStorage() {
   localStorage.setItem('feedback-form-state', JSON.stringify(formState));
 }
 
-// Перевіряємо наявність даних у локальному сховищі та заповнюємо поля форми
+
+
+// Функція для перевірки стану сховища та заповнення полів форми
 function populateFormFromLocalStorage() {
   const savedState = localStorage.getItem('feedback-form-state');
   if (savedState) {
     const parsedState = JSON.parse(savedState);
     emailInput.value = parsedState.email;
     messageInput.value = parsedState.message;
+  } else {
+    emailInput.value = '';
+    messageInput.value = '';
   }
 }
 
@@ -48,6 +51,5 @@ form.addEventListener('submit', event => {
   sendButton.disabled = true;
 });
 
-// Завантаження даних з локального сховища під час завантаження сторінки
+// Завантажуємо дані з локального сховища під час завантаження сторінки
 populateFormFromLocalStorage();
-
