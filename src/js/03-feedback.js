@@ -14,7 +14,7 @@ const updateLocalStorage = throttle(() => {
     localStorage.setItem('feedback-form-state', JSON.stringify(feedbackState));
 }, 500); // Оновлювати не частіше одного разу в 500 мілісекунд
 
-// Функція для завантаження даних зі сховища
+// Функція для завантаження даних зі сховища та відновлення стану форми
 const loadFromLocalStorage = () => {
     const savedState = localStorage.getItem('feedback-form-state');
     if (savedState) {
@@ -26,6 +26,15 @@ const loadFromLocalStorage = () => {
         messageInput.value = '';
     }
 }
+
+// Завантаження даних зі сховища при завантаженні сторінки
+loadFromLocalStorage();
+
+// Додайте обробники подій для відслідковування вводу
+form.addEventListener('input', () => {
+    updateLocalStorage(); // Оновлюємо сховище при кожному введенні
+    sendButton.disabled = false; // Робимо кнопку відправки активною
+});
 
 // Очищення сховища та полів форми при відправці
 form.addEventListener('submit', event => {
@@ -40,9 +49,3 @@ form.addEventListener('submit', event => {
     messageInput.value = '';
     sendButton.disabled = true;
 });
-
-// Додайте обробники подій для відслідковування вводу
-form.addEventListener('input', updateLocalStorage);
-
-// Завантажте дані зі сховища при завантаженні сторінки
-loadFromLocalStorage();
