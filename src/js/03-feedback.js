@@ -1,6 +1,6 @@
 
   // Функція для оновлення об'єкта стану форми і збереження його в локальному сховищі з обмеженням на 500 мілісекунд
-  const updateFormStateThrottled = _.throttle(function() {
+  const updateFormStateThrottled = document.throttle(function() {
     const emailInput = document.querySelector('input[name="email"]');
     const messageInput = document.querySelector('textarea[name="message"]');
 
