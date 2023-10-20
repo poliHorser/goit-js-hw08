@@ -1,54 +1,48 @@
+import throttle from 'lodash.throttle';
 
-  // Функція для оновлення об'єкта стану форми і збереження його в локальному сховищі з обмеженням на 500 мілісекунд
-  const updateFormStateThrottled = document.throttle(function() {
-    const emailInput = document.querySelector('input[name="email"]');
-    const messageInput = document.querySelector('textarea[name="message"]');
+const form = document.querySelector('.feedback-form');
+const emailInput = form.querySelector('input[name="email"]');
+const messageInput = form.querySelector('textarea[name="message"]');
+const sendButton = form.querySelector('button[type="submit"]');
 
-    // Створюємо об'єкт стану форми
-    const formState = {
-      email: emailInput.value,
-      message: messageInput.value
+// Функція для оновлення сховища
+const updateLocalStorage = throttle(() => {
+    const feedbackState = {
+        email: emailInput.value,
+        message: messageInput.value,
     };
+    localStorage.setItem('feedback-form-state', JSON.stringify(feedbackState));
+}, 500); // Оновлювати не частіше одного разу в 500 мілісекунд
 
-    // Зберігаємо об'єкт стану форми в локальному сховищі
-    localStorage.setItem('feedback-form-state', JSON.stringify(formState));
-  }, 500); // Оновлення не частіше, ніж раз на 500 мілісекунд
+// Функція для завантаження даних зі сховища
+const loadFromLocalStorage = () => {
+    const savedState = localStorage.getItem('feedback-form-state');
+    if (savedState) {
+        const parsedState = JSON.parse(savedState);
+        emailInput.value = parsedState.email;
+        messageInput.value = parsedState.message;
+    } else {
+        emailInput.value = '';
+        messageInput.value = '';
+    }
+}
 
-  // Викликаємо функцію оновлення стану при події input на полях форми
-  const emailInput = document.querySelector('input[name="email"]');
-  const messageInput = document.querySelector('textarea[name="message"]');
-
-  emailInput.addEventListener('input', updateFormStateThrottled);
-  messageInput.addEventListener('input', updateFormStateThrottled);
-
-  // Встановлюємо збережений стан форми, якщо він є
-  const savedFormState = localStorage.getItem('feedback-form-state');
-  if (savedFormState) {
-    const formState = JSON.parse(savedFormState);
-    emailInput.value = formState.email;
-    messageInput.value = formState.message;
-  } else {
-    // Якщо збереженого стану немає, очищаємо поля форми
+// Очищення сховища та полів форми при відправці
+form.addEventListener('submit', event => {
+    event.preventDefault();
+    const formState = {
+        email: emailInput.value,
+        message: messageInput.value,
+    };
+    console.log(formState);
+    localStorage.removeItem('feedback-form-state');
     emailInput.value = '';
     messageInput.value = '';
-  }
+    sendButton.disabled = true;
+});
 
-  // Функція для зберігання стану форми при відправці форми
-  function saveFormValues(event) {
-    // Забороняємо відправку форми, оскільки ми вже зберегли дані
-    event.preventDefault();
+// Додайте обробники подій для відслідковування вводу
+form.addEventListener('input', updateLocalStorage);
 
-    // Очищаємо локальне сховище
-    localStorage.removeItem('feedback-form-state');
-
-    // Виводимо об'єкт стану в консоль
-    console.log({
-      email: emailInput.value,
-      message: messageInput.value
-    });
-  }
-
-  // Додаємо обробник події submit для заборони відправки форми
-  const feedbackForm = document.querySelector('.feedback-form');
-  feedbackForm.addEventListener('submit', saveFormValues);
-
+// Завантажте дані зі сховища при завантаженні сторінки
+loadFromLocalStorage();
