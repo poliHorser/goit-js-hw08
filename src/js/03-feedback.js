@@ -48,13 +48,20 @@ document.querySelector('.feedback-form').addEventListener('submit', function (ev
 });
 // Відстежуємо подію submit для очищення полів вводу
 document.querySelector('.feedback-form').addEventListener('submit', function (event) {
-  event.preventDefault();
-  const emailInput = document.querySelector('input[name="email"]');
-  const messageTextarea = document.querySelector('textarea[name="message"]');
-  
-  // Очищаємо поля вводу
+    event.preventDefault();
+    // Очищаємо поля вводу
   emailInput.value = '';
   messageTextarea.value = '';
+//   const emailInput = document.querySelector('input[name="email"]');
+//   const messageTextarea = document.querySelector('textarea[name="message"]');
+  
+//   // Очищаємо поля вводу
+//   emailInput.value = '';
+    //   messageTextarea.value = '';
+    
+    emailInput.value = localStorage.getItem(email)
+    messageTextarea.value = localStorage.getItem(message)
+    
   
   // Виводимо дані в консоль
   console.log({
